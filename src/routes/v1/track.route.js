@@ -2,14 +2,16 @@ const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const trackValidation = require('../../validations/track.validation');
-const trackController = require('../../controllers/user.controller');
+const trackController = require('../../controllers/track.controller');
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageTrack'), validate(userValidation.createUser), userController.createUser)
-  .get(validate(userValidation.getUsers), userController.getUsers);
+  .post(auth('manageTrack'), validate(trackValidation.createTrack), trackController.createTrack)
+  .get(validate(trackValidation.getTrack), trackController.getTracks);
+
+module.exports = router;
 
 /**
  * @swagger
