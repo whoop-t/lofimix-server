@@ -22,7 +22,7 @@ npm run dev
 `PATCH /v1/users/:userId` - update user\
 `DELETE /v1/users/:userId` - delete user
 
-**Swagger route(auto generated api documentation)**:\:
+**Swagger route(auto generated api documentation)**:\
 `GET /v1/docs` - Swagger page with all api information\
 
 # Jumpstart help from node boilerplate
