@@ -22,6 +22,10 @@ npm run dev
 `PATCH /v1/users/:userId` - update user\
 `DELETE /v1/users/:userId` - delete user
 
+**Track routes**:\
+`POST /v1/tracks` - create a track\
+`GET /v1/tracks` - get all tracks
+
 **Swagger route(auto generated api documentation)**:\
 `GET /v1/docs` - Swagger page with all api information\
 

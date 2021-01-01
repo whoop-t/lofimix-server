@@ -8,7 +8,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageTrack'), validate(trackValidation.createTrack), trackController.createTrack)
+  .post(auth('createTrack'), validate(trackValidation.createTrack), trackController.createTrack)
   .get(validate(trackValidation.getTrack), trackController.getTracks);
 
 module.exports = router;
