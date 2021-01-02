@@ -4,7 +4,7 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { trackService } = require('../services');
 
-// TODO We want to Auth the user, then user the userId in the token to create the uploader property
+// TODO User is added to req after auth, use to populate uploader
 const createTrack = catchAsync(async (req, res) => {
   const track = await trackService.createTrack(req.body);
   res.status(httpStatus.CREATED).send(track);

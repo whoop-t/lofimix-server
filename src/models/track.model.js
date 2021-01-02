@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 
 const trackSchema = mongoose.Schema(
@@ -10,7 +9,7 @@ const trackSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    name: {
+    title: {
       type: String,
       required: true,
       trim: true,
@@ -20,19 +19,23 @@ const trackSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    file: {
+    filePath: {
       type: String,
       required: true,
     },
-    art: {
+    artPath: {
       type: String,
     },
     flaggedForCopyright: {
       type: String,
       default: false,
     },
+    views: {
+      type: Number,
+      default: 0,
+    },
     tags: {
-      type: Array,
+      type: String,
       required: true,
     },
   },
