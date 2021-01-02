@@ -3,6 +3,7 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { trackService } = require('../services');
+const { generateSignedURL } = require('../middlewares/uploadFile');
 
 // TODO User is added to req after auth, use to populate uploader
 const createTrack = catchAsync(async (req, res) => {
@@ -13,8 +14,9 @@ const createTrack = catchAsync(async (req, res) => {
 const getTracks = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['tags']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await trackService.queryTracks(filter, options);
-  res.send(result);
+  const results = await trackService.queryTracks(filter, options);
+  const resultsWithSignedURLs = await generateSignedURL(results);
+  res.send({ resultsWithSignedURLs });
 });
 
 module.exports = {

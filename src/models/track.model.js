@@ -19,11 +19,11 @@ const trackSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    filePath: {
+    fileKey: {
       type: String,
       required: true,
     },
-    artPath: {
+    signedURL: {
       type: String,
     },
     flaggedForCopyright: {

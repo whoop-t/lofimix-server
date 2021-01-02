@@ -47,11 +47,17 @@ const uploadFile = (req, res, next) => {
     if (err) {
       return res.json({ success: false, err: err.message });
     }
-    uploadToAWS(req.file.path, req.file.filename, res, next);
+    uploadToAWS(req, res, next);
     //next();
   });
 };
 
+/**
+ * Only allow mp3 file uploads with Multer
+ * @param {*} req
+ * @param {*} file
+ * @param {*} cb
+ */
 const multerFilter = (req, file, cb) => {
   const ext = path.extname(file.originalname);
   console.log(ext);
@@ -63,18 +69,17 @@ const multerFilter = (req, file, cb) => {
 
 /**
  * Upload file to S3 Bucket
- * @param {*} source
- * @param {*} targetName
+ * @param {*} req
  * @param {*} res
  * @param {*} next
  */
-const uploadToAWS = (source, targetName, res, next) => {
+const uploadToAWS = (req, res, next) => {
   console.log('preparing to upload...');
-  fs.readFile(source, function (err, filedata) {
+  fs.readFile(req.file.path, function (err, filedata) {
     if (!err) {
       const putParams = {
-        Bucket: 'lofimix-tracks',
-        Key: targetName,
+        Bucket: config.aws.tracksBucket,
+        Key: req.file.filename,
         Body: filedata,
       };
       s3.upload(putParams, function (err, data) {
@@ -82,34 +87,50 @@ const uploadToAWS = (source, targetName, res, next) => {
           console.log('Could not upload the file. Error :', err);
           return res.send({ success: false });
         } else {
-          //fs.unlink(source); // Deleting the file from uploads folder(Optional).Do Whatever you prefer.
+          fs.unlink(req.file.path, () => {
+            console.log('file deleted');
+          }); // Deleting the file from uploads folder
           console.log('Successfully uploaded the file');
+          req.body.fileKey = req.file.filename;
           next();
         }
       });
     } else {
       console.log({ err: err });
+      return res.send({ success: false });
     }
   });
 };
 
-//TODO Figure out how to retrieve tracks from S3
-// const retrieveTrackForAWS = (filename,res) => {
-//   const getParams = {
-//     Bucket: 'lofimix-tracks',
-//     Key: filename
-//   };
-
-//   s3.getObject(getParams, function(err, data) {
-//     if (err){
-//       return res.status(400).send({success:false,err:err});
-//     }
-//     else{
-//       return res.send(data.Body);
-//     }
-//   });
-// }
+/**
+ * Gets signed url from s3 bucket for playback
+ * @param {*} results
+ */
+const generateSignedURL = async (results) => {
+  return new Promise((resolve, reject) => {
+    const resultsWithURLs = [];
+    results.results.forEach((track) => {
+      const url = s3.getSignedUrl(
+        'getObject',
+        {
+          Bucket: config.aws.tracksBucket,
+          Key: track.fileKey,
+          Expires: config.aws.urlExpire,
+        },
+        (err, url) => {
+          if (err) {
+            reject(err);
+          }
+          track['signedURL'] = url;
+          resultsWithURLs.push(track);
+          resolve(resultsWithURLs);
+        }
+      );
+    });
+  });
+};
 
 module.exports = {
   uploadFile,
+  generateSignedURL,
 };
