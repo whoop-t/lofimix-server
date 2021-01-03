@@ -5,9 +5,8 @@ const { toJSON, paginate } = require('./plugins');
 const trackSchema = mongoose.Schema(
   {
     uploader: {
-      type: String,
+      type: mongoose.Schema.Types.Mixed,
       required: true,
-      trim: true,
     },
     title: {
       type: String,
@@ -31,6 +30,10 @@ const trackSchema = mongoose.Schema(
       default: false,
     },
     views: {
+      type: Number,
+      default: 0,
+    },
+    downloads: {
       type: Number,
       default: 0,
     },

@@ -3,6 +3,7 @@ const AWS = require('aws-sdk');
 const fs = require('fs');
 const path = require('path');
 const config = require('../config/config');
+const logger = require('../config/logger');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 
@@ -45,6 +46,7 @@ const uploadFile = (req, res, next) => {
 
   upload(req, res, (err) => {
     if (err) {
+      logger.error(err);
       return res.json({ success: false, err: err.message });
     }
     uploadToAWS(req, res, next);
@@ -85,6 +87,7 @@ const uploadToAWS = (req, res, next) => {
       s3.upload(putParams, function (err, data) {
         if (err) {
           console.log('Could not upload the file. Error :', err);
+          logger.error(err);
           return res.send({ success: false });
         } else {
           fs.unlink(req.file.path, () => {
@@ -92,11 +95,13 @@ const uploadToAWS = (req, res, next) => {
           }); // Deleting the file from uploads folder
           console.log('Successfully uploaded the file');
           req.body.fileKey = req.file.filename;
+          req.body.uploader = { uploaderId: req.user.id, uploaderName: req.user.name };
           next();
         }
       });
     } else {
       console.log({ err: err });
+      logger.error(err);
       return res.send({ success: false });
     }
   });
@@ -119,6 +124,7 @@ const generateSignedURL = async (results) => {
         },
         (err, url) => {
           if (err) {
+            logger.error(err);
             reject(err);
           }
           track['signedURL'] = url;

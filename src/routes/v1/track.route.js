@@ -32,41 +32,38 @@ module.exports = router;
  *      requestBody:
  *        required: true
  *        content:
- *          application/json:
+ *          form-data:
  *            schema:
  *              type: object
  *              required:
- *                - name
- *                - email
- *                - password
+ *                - file(mp3)
+ *                - uploader
+ *                - title
+ *                - description
+ *                - tags
  *              properties:
- *                name:
+ *                uploader:
  *                  type: string
- *                email:
+ *                title:
  *                  type: string
- *                  format: email
- *                  description: must be unique
- *                password:
+ *                description:
  *                  type: string
- *                  format: password
- *                  minLength: 8
- *                  description: At least one number and one letter
+ *                tags:
+ *                  type: string
  *              example:
- *                name: fake name
- *                email: fake@example.com
- *                password: password1
- *      responses:
- *        "201":
- *          description: Created
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  user:
- *                    $ref: '#/components/schemas/User'
- *                  tokens:
- *                    $ref: '#/components/schemas/AuthTokens'
- *        "400":
- *          $ref: '#/components/responses/DuplicateEmail'
+ *                file: sound.mp3
+ *                title: Lofi Summer
+ *                uploader: 12123414fsdfsfdsfs
+ *                description: A great song
+ *                tags: lofi;hiphop;retro
+ */
+
+/**
+ * @swagger
+ * path:
+ *  /track:
+ *    get:
+ *      summary: Get tracks
+ *      description: Get tracks, can use filters
+ *      tags: [Track]
  */
