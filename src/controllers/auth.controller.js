@@ -10,7 +10,7 @@ const register = catchAsync(async (req, res) => {
     .cookie('refresh_token', 'Bearer ' + tokens.refresh, {
       expires: tokens.refresh.expires, // cookie will be removed after 30 days
     })
-    .send({ user, tokens });
+    .send({ user, access_token: tokens.access });
 });
 
 const login = catchAsync(async (req, res) => {
