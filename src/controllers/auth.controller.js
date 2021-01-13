@@ -7,7 +7,7 @@ const register = catchAsync(async (req, res) => {
   const tokens = await tokenService.generateAuthTokens(user);
   res
     .status(httpStatus.CREATED)
-    .cookie('refresh_token', 'Bearer ' + tokens.refresh, {
+    .cookie('refresh_token', tokens.refresh.token, {
       path: '/', // TODO scope path to only getting access tokens
       httpOnly: true,
       expires: tokens.refresh.expires, // cookie will be removed after 30 days
@@ -20,7 +20,7 @@ const login = catchAsync(async (req, res) => {
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await tokenService.generateAuthTokens(user);
   res
-    .cookie('refresh_token', 'Bearer ' + tokens.refresh, {
+    .cookie('refresh_token', tokens.refresh.token, {
       path: '/', // TODO scope path to only getting access tokens
       httpOnly: true,
       expires: tokens.refresh.expires, // cookie will be removed after 30 days
@@ -29,13 +29,22 @@ const login = catchAsync(async (req, res) => {
 });
 
 const logout = catchAsync(async (req, res) => {
-  await authService.logout(req.body.refreshToken);
+  const { refresh_token } = req.cookies;
+  res.clearCookie('refresh_token');
+  await authService.logout(refresh_token);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
 const refreshTokens = catchAsync(async (req, res) => {
-  const tokens = await authService.refreshAuth(req.body.refreshToken);
-  res.send({ ...tokens });
+  const { refresh_token } = req.cookies;
+  const tokens = await authService.refreshAuth(refresh_token);
+  res
+    .cookie('refresh_token', tokens.refresh.token, {
+      path: '/', // TODO scope path to only getting access tokens
+      httpOnly: true,
+      expires: tokens.refresh.expires, // cookie will be removed after 30 days
+    })
+    .send({ access_token: tokens.access });
 });
 
 const forgotPassword = catchAsync(async (req, res) => {
