@@ -8,6 +8,8 @@ const register = catchAsync(async (req, res) => {
   res
     .status(httpStatus.CREATED)
     .cookie('refresh_token', 'Bearer ' + tokens.refresh, {
+      path: '/', // TODO scope path to only getting access tokens
+      httpOnly: true,
       expires: tokens.refresh.expires, // cookie will be removed after 30 days
     })
     .send({ user, access_token: tokens.access });
@@ -17,7 +19,13 @@ const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
+  res
+    .cookie('refresh_token', 'Bearer ' + tokens.refresh, {
+      path: '/', // TODO scope path to only getting access tokens
+      httpOnly: true,
+      expires: tokens.refresh.expires, // cookie will be removed after 30 days
+    })
+    .send({ user, access_token: tokens.access });
 });
 
 const logout = catchAsync(async (req, res) => {
