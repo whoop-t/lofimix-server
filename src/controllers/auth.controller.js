@@ -5,7 +5,12 @@ const { authService, userService, tokenService, emailService } = require('../ser
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.status(httpStatus.CREATED).send({ user, tokens });
+  res
+    .status(httpStatus.CREATED)
+    .cookie('refresh_token', 'Bearer ' + tokens.refresh, {
+      expires: tokens.refresh.expires, // cookie will be removed after 30 days
+    })
+    .send({ user, tokens });
 });
 
 const login = catchAsync(async (req, res) => {

@@ -1,5 +1,6 @@
 const express = require('express');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 const xss = require('xss-clean');
 const mongoSanitize = require('express-mongo-sanitize');
 const compression = require('compression');
@@ -24,6 +25,9 @@ if (config.env !== 'test') {
 // set security HTTP headers
 app.use(helmet());
 
+// parse cookies
+app.use(cookieParser());
+
 // parse json request body
 app.use(express.json());
 
@@ -38,8 +42,8 @@ app.use(mongoSanitize());
 app.use(compression());
 
 // enable cors
-app.use(cors());
-app.options('*', cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+//app.options('*', cors());
 
 // jwt authentication
 app.use(passport.initialize());
