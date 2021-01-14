@@ -10,6 +10,7 @@ router.post('/login', validate(authValidation.login), authController.login);
 // Validation removed since refresh is in cookie, maybe add back different validation for cookie later
 router.post('/logout', authController.logout);
 router.post('/refresh-tokens', authController.refreshTokens);
+router.post('/remember-me', authController.refreshTokensRemember);
 router.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
 router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
 
