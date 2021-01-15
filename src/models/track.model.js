@@ -13,21 +13,17 @@ const trackSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    description: {
-      type: String,
-      required: true,
-      trim: true,
-    },
     fileKey: {
       type: String,
       required: true,
     },
-    signedURL: {
-      type: String,
-    },
     flaggedForCopyright: {
       type: String,
       default: false,
+    },
+    signedURL: {
+      type: String,
+      default: '',
     },
     views: {
       type: Number,

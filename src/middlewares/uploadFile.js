@@ -6,6 +6,7 @@ const config = require('../config/config');
 const logger = require('../config/logger');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
+const { userService } = require('../services');
 
 /**
  * AWS Setup
@@ -84,7 +85,7 @@ const uploadToAWS = (req, res, next) => {
         Key: req.file.filename,
         Body: filedata,
       };
-      s3.upload(putParams, function (err, data) {
+      s3.upload(putParams, async (err, data) => {
         if (err) {
           console.log('Could not upload the file. Error :', err);
           logger.error(err);
@@ -94,8 +95,10 @@ const uploadToAWS = (req, res, next) => {
             console.log('file deleted');
           }); // Deleting the file from uploads folder
           console.log('Successfully uploaded the file');
+          // TODO Adds filekey and user to req to save to db, should prob move this
           req.body.fileKey = req.file.filename;
-          req.body.uploader = { uploaderId: req.user.id, uploaderName: req.user.name };
+          const user = await userService.getUserById(req.user.id);
+          req.body.uploader = { uploaderId: req.user.id, uploaderName: user.displayName };
           next();
         }
       });

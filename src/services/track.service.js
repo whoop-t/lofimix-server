@@ -1,7 +1,6 @@
 const httpStatus = require('http-status');
 const { Track } = require('../models');
 const ApiError = require('../utils/ApiError');
-const multer = require('multer');
 
 /**
  * Create a track
