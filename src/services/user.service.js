@@ -37,6 +37,14 @@ const queryUsers = async (filter, options) => {
 const getUserById = async (id) => {
   return User.findById(id);
 };
+/**
+ * Get user by id
+ * @param {ObjectId} id
+ * @returns {Promise<User>}
+ */
+const getUserByIdAndUpdateTrackRef = async (id, trackId) => {
+  return User.findOneAndUpdate(id, { $push: { uploads: trackId } });
+};
 
 /**
  * Get user by email
@@ -87,4 +95,5 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  getUserByIdAndUpdateTrackRef,
 };

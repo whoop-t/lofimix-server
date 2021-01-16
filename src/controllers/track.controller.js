@@ -2,12 +2,14 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { trackService } = require('../services');
+const { trackService, userService } = require('../services');
 const { generateSignedURL } = require('../middlewares/uploadFile');
 
 // TODO User is added to req after auth, use to populate uploader
 const createTrack = catchAsync(async (req, res) => {
   const track = await trackService.createTrack(req.body);
+  // Update uploads array by inserting track ref
+  const user = await userService.getUserByIdAndUpdateTrackRef(track.uploader.uploaderId, track.id);
   res.status(httpStatus.CREATED).send(track);
 });
 

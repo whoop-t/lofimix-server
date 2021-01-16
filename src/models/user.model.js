@@ -4,6 +4,35 @@ const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 
+// Profile for user, embedded doc on user model
+const profileSchema = mongoose.Schema({
+  description: {
+    type: String,
+    default: '',
+  },
+  twitter: {
+    type: String,
+    default: '',
+  },
+  youtube: {
+    type: String,
+    default: '',
+  },
+  soundcloud: {
+    type: String,
+    default: '',
+  },
+  instagram: {
+    type: String,
+    default: '',
+  },
+  spotify: {
+    type: String,
+    default: '',
+  },
+});
+
+// User Schema
 const userSchema = mongoose.Schema(
   {
     displayName: {
@@ -40,6 +69,12 @@ const userSchema = mongoose.Schema(
       enum: roles,
       default: 'user',
     },
+    profile: {
+      type: profileSchema,
+      default: {},
+    },
+    uploads: [{ type: mongoose.Types.ObjectId, ref: 'Track' }],
+    favorites: [{ type: mongoose.Types.ObjectId, ref: 'Track' }],
   },
   {
     timestamps: true,

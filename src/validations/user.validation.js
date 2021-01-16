@@ -1,12 +1,25 @@
 const Joi = require('joi');
 const { password, objectId } = require('./custom.validation');
 
+const profileSchema = {
+  body: Joi.object().keys({
+    description: Joi.string(),
+    twitter: Joi.string(),
+    youtube: Joi.string(),
+    soundcloud: Joi.string(),
+    instagram: Joi.string(),
+    spotify: Joi.string(),
+  }),
+};
 const createUser = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
     diaplyName: Joi.string().required(),
     role: Joi.string().required().valid('user', 'admin'),
+    profile: Joi.object(profileSchema).required(),
+    uploads: Joi.array().required(),
+    favorites: Joi.array().required(),
   }),
 };
 
