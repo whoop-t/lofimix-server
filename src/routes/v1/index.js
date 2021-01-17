@@ -2,6 +2,7 @@ const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const trackRoute = require('./track.route');
+const profileRoute = require('./profile.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -19,6 +20,10 @@ const defaultRoutes = [
   {
     path: '/tracks',
     route: trackRoute,
+  },
+  {
+    path: '/profiles',
+    route: profileRoute,
   },
 ];
 
