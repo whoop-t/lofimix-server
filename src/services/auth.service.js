@@ -45,7 +45,9 @@ const refreshAuth = async (refreshToken) => {
       throw new Error();
     }
     await refreshTokenDoc.remove();
-    return tokenService.generateAuthTokens(user);
+    // return user and tokens
+    const res = { user: user, tokens: await tokenService.generateAuthTokens(user) };
+    return res;
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
   }

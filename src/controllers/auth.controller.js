@@ -55,14 +55,14 @@ const refreshTokens = catchAsync(async (req, res) => {
 const refreshTokensRemember = catchAsync(async (req, res) => {
   const { refresh_token, remember } = req.cookies;
   if (remember) {
-    const tokens = await authService.refreshAuth(refresh_token);
+    const { user, tokens } = await authService.refreshAuth(refresh_token);
     res
       .cookie('refresh_token', tokens.refresh.token, {
         path: '/', // TODO scope path to only getting access tokens
         httpOnly: true,
         expires: tokens.refresh.expires, // cookie will be removed after 30 days
       })
-      .send({ access_token: tokens.access });
+      .send({ user, access_token: tokens.access });
   } else {
     res.clearCookie('refresh_token');
     res.status(httpStatus.NO_CONTENT).send();

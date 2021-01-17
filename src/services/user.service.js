@@ -35,7 +35,7 @@ const queryUsers = async (filter, options) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (id) => {
-  return User.findById(id);
+  return User.findById(id).populate('uploads').populate('favorites');
 };
 /**
  * Get user by id and add upload track ref
@@ -53,6 +53,14 @@ const getUserByIdAndUpdateTrackRef = async (id, trackId) => {
 const getUserByIdAndUpdateFavorites = async (id, trackId) => {
   return User.findOneAndUpdate(id, { $addToSet: { favorites: trackId } });
 };
+/**
+ * Get user by id and delete favorite
+ * @param {ObjectId} id
+ * @returns {Promise<User>}
+ */
+const getUserByIdAndDeleteFavorite = async (id, trackId) => {
+  return User.findOneAndUpdate(id, { $pull: { favorites: trackId } });
+};
 
 /**
  * Get user by email
@@ -60,7 +68,7 @@ const getUserByIdAndUpdateFavorites = async (id, trackId) => {
  * @returns {Promise<User>}
  */
 const getUserByEmail = async (email) => {
-  return User.findOne({ email });
+  return User.findOne({ email }).populate('uploads').populate('favorites');
 };
 
 /**
@@ -105,4 +113,5 @@ module.exports = {
   deleteUserById,
   getUserByIdAndUpdateTrackRef,
   getUserByIdAndUpdateFavorites,
+  getUserByIdAndDeleteFavorite,
 };
