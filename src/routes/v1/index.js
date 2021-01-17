@@ -3,6 +3,7 @@ const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const trackRoute = require('./track.route');
 const profileRoute = require('./profile.route');
+const favoritesRoute = require('./favorites.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -24,6 +25,10 @@ const defaultRoutes = [
   {
     path: '/profiles',
     route: profileRoute,
+  },
+  {
+    path: '/favorites',
+    route: favoritesRoute,
   },
 ];
 

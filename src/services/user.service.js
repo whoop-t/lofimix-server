@@ -38,12 +38,20 @@ const getUserById = async (id) => {
   return User.findById(id);
 };
 /**
- * Get user by id
+ * Get user by id and add upload track ref
  * @param {ObjectId} id
  * @returns {Promise<User>}
  */
 const getUserByIdAndUpdateTrackRef = async (id, trackId) => {
   return User.findOneAndUpdate(id, { $push: { uploads: trackId } });
+};
+/**
+ * Get user by id and add favorite
+ * @param {ObjectId} id
+ * @returns {Promise<User>}
+ */
+const getUserByIdAndUpdateFavorites = async (id, trackId) => {
+  return User.findOneAndUpdate(id, { $push: { favorites: trackId } });
 };
 
 /**
@@ -96,4 +104,5 @@ module.exports = {
   updateUserById,
   deleteUserById,
   getUserByIdAndUpdateTrackRef,
+  getUserByIdAndUpdateFavorites,
 };
