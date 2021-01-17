@@ -43,7 +43,7 @@ const getUserById = async (id) => {
  * @returns {Promise<User>}
  */
 const getUserByIdAndUpdateTrackRef = async (id, trackId) => {
-  return User.findOneAndUpdate(id, { $push: { uploads: trackId } });
+  return User.findOneAndUpdate(id, { $addToSet: { uploads: trackId } });
 };
 /**
  * Get user by id and add favorite
@@ -51,7 +51,7 @@ const getUserByIdAndUpdateTrackRef = async (id, trackId) => {
  * @returns {Promise<User>}
  */
 const getUserByIdAndUpdateFavorites = async (id, trackId) => {
-  return User.findOneAndUpdate(id, { $push: { favorites: trackId } });
+  return User.findOneAndUpdate(id, { $addToSet: { favorites: trackId } });
 };
 
 /**

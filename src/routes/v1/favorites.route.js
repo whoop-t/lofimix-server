@@ -4,6 +4,6 @@ const favoriteController = require('../../controllers/favorite.controller');
 
 const router = express.Router();
 
-router.route('/').post(auth('saveFavorites'), favoriteController.saveFavorite).get(favoriteController.getFavorites);
+router.route('/').put(auth('saveFavorites'), favoriteController.saveFavorite).get(favoriteController.getFavorites);
 
 module.exports = router;
