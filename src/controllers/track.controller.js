@@ -17,11 +17,17 @@ const getTracks = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['tags']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const results = await trackService.queryTracks(filter, options);
-  const resultsWithSignedURLs = await generateSignedURL(results);
-  res.send({ resultsWithSignedURLs });
+  res.send({ tracks: results.results });
+});
+
+const playTrack = catchAsync(async (req, res) => {
+  const { fileKey } = pick(req.query, ['fileKey']);
+  const signedURL = await generateSignedURL(fileKey);
+  res.send({ signedURL });
 });
 
 module.exports = {
   createTrack,
   getTracks,
+  playTrack,
 };

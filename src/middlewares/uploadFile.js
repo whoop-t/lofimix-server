@@ -114,28 +114,23 @@ const uploadToAWS = (req, res, next) => {
  * Gets signed url from s3 bucket for playback
  * @param {*} results
  */
-const generateSignedURL = async (results) => {
+const generateSignedURL = async (fileKey) => {
   return new Promise((resolve, reject) => {
-    const resultsWithURLs = [];
-    results.results.forEach((track) => {
-      const url = s3.getSignedUrl(
-        'getObject',
-        {
-          Bucket: config.aws.tracksBucket,
-          Key: track.fileKey,
-          Expires: config.aws.urlExpire,
-        },
-        (err, url) => {
-          if (err) {
-            logger.error(err);
-            reject(err);
-          }
-          track['signedURL'] = url;
-          resultsWithURLs.push(track);
-          resolve(resultsWithURLs);
+    const url = s3.getSignedUrl(
+      'getObject',
+      {
+        Bucket: config.aws.tracksBucket,
+        Key: fileKey,
+        Expires: config.aws.urlExpire,
+      },
+      (err, url) => {
+        if (err) {
+          logger.error(err);
+          reject(err);
         }
-      );
-    });
+        resolve(url);
+      }
+    );
   });
 };
 

@@ -11,6 +11,7 @@ router
   .route('/')
   .post(auth('createTrack'), uploadFile, validate(trackValidation.createTrack), trackController.createTrack)
   .get(validate(trackValidation.getTrack), trackController.getTracks);
+router.route('/play').get(trackController.playTrack);
 
 module.exports = router;
 
