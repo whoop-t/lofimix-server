@@ -9,7 +9,7 @@ const createTrack = {
     signedURL: Joi.string(),
     plays: Joi.number(),
     downloads: Joi.number(),
-    tags: Joi.string().required(),
+    tags: Joi.array().required(),
   }),
 };
 

@@ -34,7 +34,7 @@ const trackSchema = mongoose.Schema(
       default: 0,
     },
     tags: {
-      type: String,
+      type: Array,
       required: true,
     },
   },
