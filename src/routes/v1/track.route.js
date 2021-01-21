@@ -13,7 +13,7 @@ router
   .post(auth('createTrack'), uploadFile, convertTags, validate(trackValidation.createTrack), trackController.createTrack)
   .get(validate(trackValidation.getTrack), trackController.getTracks);
 router.route('/play').get(trackController.playTrack);
-//router.route('/tags').get(trackController.getTags);
+router.route('/tags').get(trackController.getTags);
 
 module.exports = router;
 

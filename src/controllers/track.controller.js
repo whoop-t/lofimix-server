@@ -26,8 +26,15 @@ const playTrack = catchAsync(async (req, res) => {
   res.send({ signedURL });
 });
 
+const getTags = catchAsync(async (req, res) => {
+  const results = await trackService.queryTags();
+  const tags = results[0].tags;
+  res.send({ tags });
+});
+
 module.exports = {
   createTrack,
   getTracks,
   playTrack,
+  getTags,
 };

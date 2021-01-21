@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Track } = require('../models');
+const { Track, Tags } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -9,6 +9,8 @@ const ApiError = require('../utils/ApiError');
  */
 const createTrack = async (trackBody) => {
   const track = await Track.create(trackBody);
+  // * Add tags submitted with track to the aggregated tags array
+  const tags = await Tags.findOneAndUpdate({}, { $addToSet: { tags: { $each: track.tags } } });
   return track;
 };
 
@@ -25,8 +27,13 @@ const queryTracks = async (filter, options) => {
   const tracks = await Track.paginate(filter, options);
   return tracks;
 };
+const queryTags = async (options) => {
+  const tags = await Tags.find({});
+  return tags;
+};
 
 module.exports = {
   createTrack,
   queryTracks,
+  queryTags,
 };
