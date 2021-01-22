@@ -17,7 +17,7 @@ const getTracks = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['tags']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const results = await trackService.queryTracks(filter, options);
-  res.send({ tracks: results.results });
+  res.send({ tracks: results });
 });
 
 const playTrack = catchAsync(async (req, res) => {
