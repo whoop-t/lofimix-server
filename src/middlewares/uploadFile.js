@@ -155,7 +155,32 @@ const generateSignedURL = async (fileKey) => {
   });
 };
 
+/**
+ * Gets signed url from s3 bucket for image
+ * @param {*} results
+ */
+const generateSignedURLImage = async (coverKey) => {
+  return new Promise((resolve, reject) => {
+    const url = s3.getSignedUrl(
+      'getObject',
+      {
+        Bucket: config.aws.coversBucket,
+        Key: coverKey,
+        Expires: config.aws.urlExpire,
+      },
+      (err, url) => {
+        if (err) {
+          logger.error(err);
+          reject(err);
+        }
+        resolve(url);
+      }
+    );
+  });
+};
+
 module.exports = {
   uploadFile,
   generateSignedURL,
+  generateSignedURLImage,
 };

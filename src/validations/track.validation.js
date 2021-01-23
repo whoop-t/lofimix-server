@@ -8,6 +8,7 @@ const createTrack = {
     coverKey: Joi.string().required(),
     flaggedForCopyright: Joi.boolean(),
     signedURL: Joi.string(),
+    coverURL: Joi.string(),
     plays: Joi.number(),
     downloads: Joi.number(),
     tags: Joi.array().required(),

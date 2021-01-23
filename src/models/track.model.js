@@ -29,6 +29,10 @@ const trackSchema = mongoose.Schema(
       type: String,
       default: '',
     },
+    coverURL: {
+      type: String,
+      default: '',
+    },
     views: {
       type: Number,
       default: 0,
