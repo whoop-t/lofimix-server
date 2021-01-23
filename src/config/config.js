@@ -12,6 +12,7 @@ const envVarsSchema = Joi.object()
     AWS_ACCESS_KEY_ID: Joi.string().required().description('AWS Access key'),
     AWS_SECRET_KEY: Joi.string().required().description('AWS secret key'),
     TRACKS_BUCKET: Joi.string().required().description('Tracks bucket name'),
+    COVERS_BUCKET: Joi.string().required().description('Covers bucket name'),
     URL_EXPIRE: Joi.number().required().description('Url expire time'),
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description('minutes after which access tokens expire'),
@@ -46,6 +47,7 @@ module.exports = {
     access: envVars.AWS_ACCESS_KEY_ID,
     secret: envVars.AWS_SECRET_KEY,
     tracksBucket: envVars.TRACKS_BUCKET,
+    coversBucket: envVars.COVERS_BUCKET,
     urlExpire: envVars.URL_EXPIRE,
   },
   jwt: {

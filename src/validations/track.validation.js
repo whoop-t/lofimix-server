@@ -5,6 +5,7 @@ const createTrack = {
     uploader: Joi.object().required(),
     title: Joi.string().required(),
     fileKey: Joi.string().required(),
+    coverKey: Joi.string().required(),
     flaggedForCopyright: Joi.boolean(),
     signedURL: Joi.string(),
     plays: Joi.number(),

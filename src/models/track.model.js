@@ -17,6 +17,10 @@ const trackSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    coverKey: {
+      type: String,
+      required: true,
+    },
     flaggedForCopyright: {
       type: String,
       default: false,
