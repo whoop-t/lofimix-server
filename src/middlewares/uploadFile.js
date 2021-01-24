@@ -179,8 +179,17 @@ const generateSignedURLImage = async (coverKey) => {
   });
 };
 
+const addImageSignedUrl = (data) => {
+  return data.map(async (track) => {
+    const url = await generateSignedURLImage(track.coverKey);
+    track['coverURL'] = url;
+    return track;
+  });
+};
+
 module.exports = {
   uploadFile,
   generateSignedURL,
   generateSignedURLImage,
+  addImageSignedUrl,
 };

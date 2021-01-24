@@ -35,7 +35,7 @@ const queryUsers = async (filter, options) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (id) => {
-  return User.findById(id).populate('uploads').populate('favorites');
+  return User.findById(id, '-password -email').populate('uploads').populate('favorites');
 };
 /**
  * Get user by id and add upload track ref
