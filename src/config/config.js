@@ -22,6 +22,8 @@ const envVarsSchema = Joi.object()
     SMTP_USERNAME: Joi.string().description('username for email server'),
     SMTP_PASSWORD: Joi.string().description('password for email server'),
     EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
+    PASS: Joi.string().description('Password for lofimix email'),
+    SERVICE: Joi.string().description('Service being used for nodemailer'),
   })
   .unknown();
 
@@ -57,14 +59,19 @@ module.exports = {
     resetPasswordExpirationMinutes: 10,
   },
   email: {
-    smtp: {
-      host: envVars.SMTP_HOST,
-      port: envVars.SMTP_PORT,
-      auth: {
-        user: envVars.SMTP_USERNAME,
-        pass: envVars.SMTP_PASSWORD,
-      },
+    service: envVars.SERVICE,
+    auth: {
+      user: envVars.EMAIL_FROM,
+      pass: envVars.PASS,
     },
-    from: envVars.EMAIL_FROM,
+    // smtp: {
+    //   host: envVars.SMTP_HOST,
+    //   port: envVars.SMTP_PORT,
+    //   auth: {
+    //     user: envVars.SMTP_USERNAME,
+    //     pass: envVars.SMTP_PASSWORD,
+    //   },
+    // },
+    // from: envVars.EMAIL_FROM,
   },
 };

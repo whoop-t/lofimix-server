@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const config = require('../config/config');
 const logger = require('../config/logger');
 
-const transport = nodemailer.createTransport(config.email.smtp);
+const transport = nodemailer.createTransport(config.email);
 /* istanbul ignore next */
 if (config.env !== 'test') {
   transport
@@ -20,6 +20,19 @@ if (config.env !== 'test') {
  */
 const sendEmail = async (to, subject, text) => {
   const msg = { from: config.email.from, to, subject, text };
+  await transport.sendMail(msg);
+};
+
+/**
+ * Recieve contact us email
+ * @param {string} to
+ * @param {string} subject
+ * @param {string} text
+ * @returns {Promise}
+ */
+const sendContactUsEmail = async ({ from, to, subject, text }) => {
+  console.log(from, to, subject, text);
+  const msg = { from: config.email.auth.user, to: config.email.auth.user, subject, text: `From: <${from}>\n\n${text}` };
   await transport.sendMail(msg);
 };
 
@@ -43,4 +56,5 @@ module.exports = {
   transport,
   sendEmail,
   sendResetPasswordEmail,
+  sendContactUsEmail,
 };

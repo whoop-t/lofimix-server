@@ -4,6 +4,7 @@ const userRoute = require('./user.route');
 const trackRoute = require('./track.route');
 const profileRoute = require('./profile.route');
 const favoritesRoute = require('./favorites.route');
+const emailRoute = require('./email.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -29,6 +30,10 @@ const defaultRoutes = [
   {
     path: '/favorites',
     route: favoritesRoute,
+  },
+  {
+    path: '/email',
+    route: emailRoute,
   },
 ];
 
