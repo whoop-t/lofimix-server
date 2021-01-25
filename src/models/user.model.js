@@ -6,6 +6,14 @@ const { roles } = require('../config/roles');
 
 // Profile for user, embedded doc on user model
 const profileSchema = mongoose.Schema({
+  avatarKey: {
+    type: String,
+    default: '',
+  },
+  avatarURL: {
+    type: String,
+    default: '',
+  },
   description: {
     type: String,
     default: '',

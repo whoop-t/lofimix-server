@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService, emailService } = require('../services');
 const moment = require('moment');
-const { addImageSignedUrl } = require('../middlewares/uploadFile');
+const { addImageSignedUrl, addAvatarSignedUrl } = require('../middlewares/uploadFile');
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -23,6 +23,9 @@ const login = catchAsync(async (req, res) => {
   // Take uploads and favs on the user doc and find corresponding images in s3
   const uploadsWithURLPromises = addImageSignedUrl(user.uploads);
   const favsWithURLPromises = addImageSignedUrl(user.favorites);
+  if (user.profile['avatarKey'] !== '') {
+    user.profile = await addAvatarSignedUrl(user.profile);
+  }
   user['uploads'] = await Promise.all(uploadsWithURLPromises);
   user['favorites'] = await Promise.all(favsWithURLPromises);
   // end
@@ -67,6 +70,9 @@ const refreshTokensRemember = catchAsync(async (req, res) => {
     // Take uploads and favs on the user doc and find corresponding images in s3
     const uploadsWithURLPromises = addImageSignedUrl(user.uploads);
     const favsWithURLPromises = addImageSignedUrl(user.favorites);
+    if (user.profile['avatarKey'] !== '') {
+      user.profile = await addAvatarSignedUrl(user.profile);
+    }
     user['uploads'] = await Promise.all(uploadsWithURLPromises);
     user['favorites'] = await Promise.all(favsWithURLPromises);
     // end

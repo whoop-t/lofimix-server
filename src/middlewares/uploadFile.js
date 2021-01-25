@@ -63,6 +63,29 @@ const uploadFile = (req, res, next) => {
     //next();
   });
 };
+/**
+ * Upload avatar for profile middleware
+ */
+// TODO needs error checking and verification or something
+const uploadAvatar = (req, res, next) => {
+  const upload = multer({
+    storage: storage,
+    fileFilter: multerFilter,
+  }).single('avatar');
+
+  upload(req, res, (err) => {
+    if (err) {
+      return res.json({ success: false, err: err.message });
+    }
+    // If user didnt submit new avatar, skip upload
+    console.log(req.file);
+    if (req.file) {
+      uploadAvatarToAWS(req, res, next);
+    } else {
+      next();
+    }
+  });
+};
 
 /**
  * Only allow mp3 file uploads with Multer
@@ -78,7 +101,7 @@ const multerFilter = (req, file, cb) => {
     }
     cb(null, true);
   }
-  if (file.fieldname === 'art') {
+  if (file.fieldname === 'art' || file.fieldname === 'avatar') {
     if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
       return cb(new Error('Only png, jpg and jpeg files allowed'), false);
     }
@@ -132,6 +155,41 @@ const uploadToAWS = (req, res, next) => {
 };
 
 /**
+ * Loop over files (track and cover pic), upload each file to S3 Bucket
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+const uploadAvatarToAWS = (req, res, next) => {
+  console.log('preparing to upload...');
+  fs.readFile(req.file.path, function (err, filedata) {
+    if (!err) {
+      const putParams = {
+        Bucket: config.aws.avatarsBucket,
+        Key: req.file.filename,
+        Body: filedata,
+      };
+      s3.upload(putParams, function (err, data) {
+        if (err) {
+          console.log('Could not upload the file. Error :', err);
+          return res.send({ success: false });
+        } else {
+          fs.unlink(req.file.path, () => {
+            console.log('file deleted');
+          }); // Deleting the file from uploads folder
+          console.log('Successfully uploaded the file');
+          req.body.avatarKey = req.file.filename;
+          next();
+        }
+      });
+    } else {
+      console.log({ err: err });
+      return res.send({ success: false });
+    }
+  });
+};
+
+/**
  * Gets signed url from s3 bucket for playback
  * @param {*} results
  */
@@ -159,13 +217,13 @@ const generateSignedURL = async (fileKey) => {
  * Gets signed url from s3 bucket for image
  * @param {*} results
  */
-const generateSignedURLImage = async (coverKey) => {
+const generateSignedURLImage = async (key, bucket) => {
   return new Promise((resolve, reject) => {
     const url = s3.getSignedUrl(
       'getObject',
       {
-        Bucket: config.aws.coversBucket,
-        Key: coverKey,
+        Bucket: config.aws[bucket],
+        Key: key,
         Expires: config.aws.urlExpire,
       },
       (err, url) => {
@@ -181,15 +239,42 @@ const generateSignedURLImage = async (coverKey) => {
 
 const addImageSignedUrl = (data) => {
   return data.map(async (track) => {
-    const url = await generateSignedURLImage(track.coverKey);
+    const url = await generateSignedURLImage(track.coverKey, 'coversBucket');
     track['coverURL'] = url;
     return track;
   });
 };
 
+const addAvatarSignedUrl = async (profile) => {
+  const url = await generateSignedURLImage(profile.avatarKey, 'avatarsBucket');
+  profile['avatarURL'] = url;
+  return profile;
+};
+
+const deleteOldAvatarFromS3 = (key) => {
+  return new Promise((resolve, reject) => {
+    const url = s3.deleteObject(
+      {
+        Bucket: config.aws.avatarsBucket,
+        Key: key,
+      },
+      (err) => {
+        if (err) {
+          logger.error(err);
+          reject(err);
+        }
+        resolve();
+      }
+    );
+  });
+};
+
 module.exports = {
   uploadFile,
+  uploadAvatar,
   generateSignedURL,
   generateSignedURLImage,
   addImageSignedUrl,
+  addAvatarSignedUrl,
+  deleteOldAvatarFromS3,
 };
