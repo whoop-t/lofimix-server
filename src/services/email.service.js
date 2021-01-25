@@ -31,7 +31,6 @@ const sendEmail = async (to, subject, text) => {
  * @returns {Promise}
  */
 const sendContactUsEmail = async ({ from, to, subject, text }) => {
-  console.log(from, to, subject, text);
   const msg = { from: config.email.auth.user, to: config.email.auth.user, subject, text: `From: <${from}>\n\n${text}` };
   await transport.sendMail(msg);
 };

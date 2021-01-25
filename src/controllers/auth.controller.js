@@ -52,7 +52,7 @@ const logout = catchAsync(async (req, res) => {
 
 const refreshTokens = catchAsync(async (req, res) => {
   const { refresh_token } = req.cookies;
-  const tokens = await authService.refreshAuth(refresh_token);
+  const { tokens } = await authService.refreshAuth(refresh_token);
   res
     .cookie('refresh_token', tokens.refresh.token, {
       path: '/', // TODO scope path to only getting access tokens

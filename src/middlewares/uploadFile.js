@@ -78,7 +78,6 @@ const uploadAvatar = (req, res, next) => {
       return res.json({ success: false, err: err.message });
     }
     // If user didnt submit new avatar, skip upload
-    console.log(req.file);
     if (req.file) {
       uploadAvatarToAWS(req, res, next);
     } else {
@@ -117,7 +116,6 @@ const multerFilter = (req, file, cb) => {
  */
 const uploadToAWS = (req, res, next) => {
   for (const file in req.files) {
-    console.log(req.files[file][0]);
     fs.readFile(req.files[file][0].path, function (err, filedata) {
       if (!err) {
         const putParams = {
