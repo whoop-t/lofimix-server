@@ -22,7 +22,7 @@ const getProfile = catchAsync(async (req, res) => {
 
 const editProfile = catchAsync(async (req, res) => {
   const userProfile = await profileService.queryProfileAndEdit(req.user._id, req.body);
-
+  userProfile.profile = await addAvatarSignedUrl(userProfile);
   res.send({ profile: userProfile });
 });
 

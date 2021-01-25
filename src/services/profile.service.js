@@ -19,7 +19,6 @@ const queryProfileAndEdit = async (id, body) => {
   // Loop body and save to doc if there is content
   for (const field in body) {
     if (body[field] !== '' || body[field] !== null) {
-      console.log(field);
       if (field === 'avatarKey') {
         // Delete old avatar from bucket
         await deleteOldAvatarFromS3(user.profile[field]);
