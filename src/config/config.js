@@ -8,6 +8,7 @@ const envVarsSchema = Joi.object()
   .keys({
     NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
     PORT: Joi.number().default(3000),
+    CORS_ORIGIN: Joi.string().required().description('CORS allowed origin'),
     MONGODB_URL: Joi.string().required().description('Mongo DB url'),
     AWS_ACCESS_KEY_ID: Joi.string().required().description('AWS Access key'),
     AWS_SECRET_KEY: Joi.string().required().description('AWS secret key'),
@@ -37,6 +38,7 @@ if (error) {
 module.exports = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
+  cors_origin: envVars.CORS_ORIGIN,
   mongoose: {
     url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),
     options: {
