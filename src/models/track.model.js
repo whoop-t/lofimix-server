@@ -13,6 +13,11 @@ const trackSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    artist: {
+      type: String,
+      trim: true,
+      default: '',
+    },
     fileKey: {
       type: String,
       required: true,

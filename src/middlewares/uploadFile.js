@@ -93,9 +93,10 @@ const uploadAvatar = (req, res, next) => {
  * @param {*} cb
  */
 const multerFilter = (req, file, cb) => {
-  const ext = path.extname(file.originalname);
+  const ext = path.extname(file.originalname).toLowerCase();
+  console.log(ext);
   if (file.fieldname === 'file') {
-    if (ext !== '.mp3') {
+    if (ext !== '.mp3' && ext !== '.m4a') {
       return cb(new Error('Only mp3 files are allowed'), false);
     }
     cb(null, true);
