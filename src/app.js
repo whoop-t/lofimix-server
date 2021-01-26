@@ -43,7 +43,7 @@ app.use(mongoSanitize());
 app.use(compression());
 
 // enable cors
-app.use(cors({ credentials: true, origin: cors_origin }));
+app.use(cors({ credentials: true, origin: config.env === 'production' ? cors_origin : 'http://localhost:3000' }));
 //app.options('*', cors());
 
 // jwt authentication
