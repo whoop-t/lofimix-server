@@ -10,6 +10,8 @@ const register = catchAsync(async (req, res) => {
   res
     .status(httpStatus.CREATED)
     .cookie('refresh_token', tokens.refresh.token, {
+      domain: 'lofimix.io',
+      secure: true,
       path: '/', // TODO scope path to only getting access tokens
       httpOnly: true,
       expires: tokens.refresh.expires, // cookie will be removed after 30 days
@@ -32,10 +34,18 @@ const login = catchAsync(async (req, res) => {
   // end
   const tokens = await tokenService.generateAuthTokens(user);
   if (remember) {
-    res.cookie('remember', 'yes', { expires: moment().add(10, 'years').toDate(), httpOnly: true, sameSite: 'strict' });
+    res.cookie('remember', 'yes', {
+      domain: 'lofimix.io',
+      secure: true,
+      expires: moment().add(10, 'years').toDate(),
+      httpOnly: true,
+      sameSite: 'strict',
+    });
   }
   res
     .cookie('refresh_token', tokens.refresh.token, {
+      domain: 'lofimix.io',
+      secure: true,
       path: '/', // TODO scope path to only getting access tokens
       httpOnly: true,
       expires: tokens.refresh.expires, // cookie will be removed after 30 days
@@ -57,6 +67,8 @@ const refreshTokens = catchAsync(async (req, res) => {
   const { tokens } = await authService.refreshAuth(refresh_token);
   res
     .cookie('refresh_token', tokens.refresh.token, {
+      domain: 'lofimix.io',
+      secure: true,
       path: '/', // TODO scope path to only getting access tokens
       httpOnly: true,
       expires: tokens.refresh.expires, // cookie will be removed after 30 days
@@ -81,6 +93,8 @@ const refreshTokensRemember = catchAsync(async (req, res) => {
     // end
     res
       .cookie('refresh_token', tokens.refresh.token, {
+        domain: 'lofimix.io',
+        secure: true,
         path: '/', // TODO scope path to only getting access tokens
         httpOnly: true,
         expires: tokens.refresh.expires, // cookie will be removed after 30 days
