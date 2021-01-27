@@ -7,6 +7,7 @@ const logger = require('../config/logger');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 const { userService } = require('../services');
+const catchAsync = require('../utils/catchAsync');
 
 /**
  * AWS Setup
@@ -25,7 +26,8 @@ const s3 = new AWS.S3();
 // SET STORAGE
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, path.join(__dirname, '../../uploads/'));
+    //cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname);
@@ -39,7 +41,7 @@ const storage = multer.diskStorage({
  * Upload file middleware
  */
 // TODO needs error checking and verification or something
-const uploadFile = (req, res, next) => {
+const uploadFile = catchAsync(async (req, res, next) => {
   const upload = multer({
     storage: storage,
     fileFilter: multerFilter,
@@ -62,7 +64,7 @@ const uploadFile = (req, res, next) => {
     uploadToAWS(req, res, next);
     //next();
   });
-};
+});
 /**
  * Upload avatar for profile middleware
  */
