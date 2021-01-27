@@ -13,6 +13,7 @@ const register = catchAsync(async (req, res) => {
       path: '/', // TODO scope path to only getting access tokens
       httpOnly: true,
       expires: tokens.refresh.expires, // cookie will be removed after 30 days
+      sameSite: 'strict',
     })
     .send({ user, access_token: tokens.access });
 });
@@ -31,13 +32,14 @@ const login = catchAsync(async (req, res) => {
   // end
   const tokens = await tokenService.generateAuthTokens(user);
   if (remember) {
-    res.cookie('remember', 'yes', { expires: moment().add(10, 'years').toDate(), httpOnly: true });
+    res.cookie('remember', 'yes', { expires: moment().add(10, 'years').toDate(), httpOnly: true, sameSite: 'strict' });
   }
   res
     .cookie('refresh_token', tokens.refresh.token, {
       path: '/', // TODO scope path to only getting access tokens
       httpOnly: true,
       expires: tokens.refresh.expires, // cookie will be removed after 30 days
+      sameSite: 'strict',
     })
     .send({ user, access_token: tokens.access });
 });
@@ -58,6 +60,7 @@ const refreshTokens = catchAsync(async (req, res) => {
       path: '/', // TODO scope path to only getting access tokens
       httpOnly: true,
       expires: tokens.refresh.expires, // cookie will be removed after 30 days
+      sameSite: 'strict',
     })
     .send({ access_token: tokens.access });
 });
@@ -81,6 +84,7 @@ const refreshTokensRemember = catchAsync(async (req, res) => {
         path: '/', // TODO scope path to only getting access tokens
         httpOnly: true,
         expires: tokens.refresh.expires, // cookie will be removed after 30 days
+        sameSite: 'strict',
       })
       .send({ user, access_token: tokens.access });
   } else {
